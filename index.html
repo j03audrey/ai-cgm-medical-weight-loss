@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI x CGM x 醫學減重｜HTML 簡報</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+  <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+  <style>
+    :root {
+      --accent: #e8643a;
+      --accent2: #4fc3f7;
+      --success: #81c784;
+      --warn: #ffb74d;
+      --bg: #0d1117;
+      --panel: rgba(255,255,255,0.065);
+      --line: rgba(255,255,255,0.16);
+    }
+    * { box-sizing: border-box; }
+    body { background: #0d1117; }
+    .reveal {
+      font-family: "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #f6fbff;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: none;
+      line-height: 1.15;
+    }
+    .reveal h1 { font-size: 2.25em; }
+    .reveal h2 { font-size: 1.38em; color: var(--accent2); }
+    .reveal h3 { font-size: 0.72em; color: #fff; }
+    .reveal p, .reveal li { line-height: 1.55; }
+    .reveal .slides section {
+      text-align: left;
+      padding: 24px 44px;
+    }
+    .reveal .progress { color: var(--accent); }
+    .deck-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 20%, rgba(232,100,58,.18), transparent 28%),
+        radial-gradient(circle at 88% 14%, rgba(79,195,247,.2), transparent 28%),
+        linear-gradient(135deg, rgba(13,17,23,.96), rgba(26,26,46,.88));
+      z-index: -2;
+    }
+    .shade {
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg, rgba(13,17,23,.96), rgba(13,17,23,.74) 52%, rgba(13,17,23,.42));
+      z-index:-1;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--warn);
+      font-size: 0.34em;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .mark {
+      color: var(--accent2);
+      border: 1px solid rgba(79,195,247,.36);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: .88em;
+      background: rgba(79,195,247,.1);
+    }
+    .title-slide {
+      max-width: 940px;
+      padding: 36px;
+      border-left: 6px solid var(--accent);
+      background: linear-gradient(135deg, rgba(255,255,255,.085), rgba(255,255,255,.035));
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+    }
+    .title-slide .subtitle { color: var(--accent); margin-top: 10px; font-size: .76em; }
+    .title-slide .body { color:#d7e7f6; font-size:.58em; margin-top: 22px; }
+    .meta-row { display:flex; flex-wrap:wrap; gap:10px; margin-top: 26px; }
+    .pill {
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #eef7ff;
+      background: rgba(255,255,255,.07);
+      font-size: .34em;
+      font-weight: 700;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .lead {
+      max-width: 860px;
+      color: #dbe9f7;
+      font-size: .56em;
+      line-height: 1.75;
+    }
+    .bullets {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+      max-width: 860px;
+      padding: 0;
+      list-style: none;
+    }
+    .bullets li {
+      font-size: .46em;
+      padding: 10px 14px;
+      border-left: 4px solid var(--accent);
+      background: rgba(255,255,255,.055);
+      border-radius: 0 8px 8px 0;
+      color: #eff7ff;
+    }
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-top: 22px; }
+    .grid.six { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .card {
+      min-height: 130px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--accent2);
+    }
+    .icon {
+      width: 52px;
+      height: 52px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 50%;
+      color: #0d1117;
+      background: var(--accent2);
+      font-size: .34em;
+      font-weight: 900;
+      box-shadow: 0 0 22px rgba(79,195,247,.45);
+      margin-bottom: 10px;
+    }
+    .card b { display:block; color: #fff; font-size:.52em; margin-bottom: 8px; }
+    .card span { display:block; color:#c6d8e8; font-size:.39em; line-height:1.55; }
+    .stats { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; margin: 24px 0; }
+    .stat {
+      text-align:center;
+      border-radius: 8px;
+      border: 1px solid rgba(232,100,58,.32);
+      background: rgba(232,100,58,.1);
+      padding: 24px 12px;
+    }
+    .stat .num { color: var(--accent); font-size: 1.15em; font-weight: 900; line-height: 1; }
+    .stat .label { color:#dcecff; font-size: .34em; margin-top: 8px; }
+    .split { display:grid; grid-template-columns: 1.05fr .95fr; gap: 26px; align-items:center; }
+    .image-frame {
+      border-radius: 8px;
+      overflow:hidden;
+      min-height: 430px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+    }
+    .image-frame img { width:100%; height:100%; max-height: 520px; object-fit: cover; display:block; filter: saturate(.98) brightness(.82); }
+    .compare { display:grid; grid-template-columns: 1fr 72px 1fr; gap:0; margin-top: 24px; align-items: stretch; }
+    .compare-col {
+      padding: 20px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .compare-col.left { border-top: 4px solid var(--accent2); }
+    .compare-col.right { border-top: 4px solid var(--warn); }
+    .compare h3 { margin:0 0 12px; }
+    .compare ul { margin:0; padding:0; list-style:none; display:grid; gap:10px; }
+    .compare li { font-size:.43em; color:#e9f3ff; border-bottom:1px solid rgba(255,255,255,.08); padding-bottom:8px; }
+    .vs { display:flex; align-items:center; justify-content:center; color:#7f93a8; font-weight:900; font-size:.86em; }
+    table { width:100%; border-collapse: collapse; margin-top:22px; font-size:.4em; overflow:hidden; border-radius:8px; }
+    th, td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,.11); vertical-align:top; }
+    th { color: var(--warn); background: rgba(255,255,255,.075); font-weight:800; }
+    td { color:#eff7ff; background: rgba(255,255,255,.035); }
+    .timeline { display:grid; gap: 14px; margin-top: 22px; }
+    .timeline-item { display:grid; grid-template-columns: 190px 1fr; gap:16px; align-items:start; padding:16px; border:1px solid var(--line); background:rgba(255,255,255,.055); border-radius:8px; }
+    .timeline-item b { color: var(--accent2); font-size:.46em; }
+    .timeline-item span { color:#edf6ff; font-size:.42em; line-height:1.55; }
+    .quote {
+      margin-top: 28px;
+      padding: 34px;
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      background: rgba(255,255,255,.065);
+      color: #fff;
+      font-size: .76em;
+      line-height: 1.6;
+      max-width: 980px;
+    }
+    .wc-grid { display:grid; grid-template-columns: 290px 1fr; gap: 16px; height: 465px; margin-top: 18px; }
+    .panel { background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:8px; padding:14px; }
+    input, button { font-family: inherit; }
+    #wc-input { width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(79,195,247,.35); background:rgba(255,255,255,.08); color:#fff; font-size:14px; outline:none; }
+    .btn { border:none; border-radius:8px; padding:10px 12px; color:#0d1117; background:var(--accent2); font-weight:800; cursor:pointer; }
+    #wc-canvas { width:100%; height:100%; display:block; }
+    .poll-options { display:grid; gap: 12px; margin-top: 22px; }
+    .poll-btn { width:100%; text-align:left; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; border-radius:8px; padding:14px 16px; cursor:pointer; font-size:.45em; }
+    .poll-btn:hover { border-color: rgba(79,195,247,.65); }
+    .bar-wrap { height:8px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; margin-top:8px; }
+    .bar { height:100%; width:0; background:linear-gradient(90deg,var(--accent2),var(--accent)); transition:width .35s ease; }
+    .viz-stage { position:relative; height:430px; border-radius:8px; overflow:hidden; border:1px solid var(--line); background:#101827; margin-top: 20px; }
+    .viz-before, .viz-after { position:absolute; inset:0; display:grid; grid-template-columns: repeat(4,1fr); gap:14px; padding:28px; align-items:stretch; }
+    .viz-before { background:linear-gradient(135deg, rgba(232,100,58,.18), rgba(255,255,255,.04)); }
+    .viz-after { background:linear-gradient(135deg, rgba(79,195,247,.20), rgba(129,199,132,.13)); clip-path:inset(0 100% 0 0); }
+    .viz-chip { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border:1px solid rgba(255,255,255,.16); border-radius:8px; background:rgba(13,17,23,.58); padding:18px; }
+    .viz-chip b { color:#fff; font-size:.48em; }
+    .viz-chip span { color:#cfe0ef; font-size:.34em; margin-top:6px; }
+    .viz-divider { position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,transparent,var(--accent2),transparent); box-shadow:0 0 18px var(--accent2); pointer-events:none; }
+    #viz-slider { width:100%; margin-top: 16px; accent-color: var(--accent2); }
+    .qa { text-align:center; display:grid; place-items:center; min-height:560px; }
+    .qa h1 { font-size:3.3em; color:var(--accent2); }
+    .source-list { columns:2; column-gap:36px; margin-top: 22px; }
+    .source-list li { break-inside:avoid; font-size:.39em; margin-bottom:9px; color:#d8e8f7; }
+    @media (max-width: 900px) {
+      .reveal .slides section { padding: 20px; }
+      .split, .grid, .grid.six, .stats, .wc-grid { grid-template-columns: 1fr; }
+      .image-frame { min-height: 220px; }
+      .compare { grid-template-columns:1fr; gap: 12px; }
+      .vs { display:none; }
+      .timeline-item { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides" id="slides"></div>
+  </div>
+
+  <script>
+    const slideData = [
+  {
+    "n": 1,
+    "type": "cover",
+    "tag": "2-hour keynote",
+    "title": "AI x CGM x 醫學減重",
+    "subtitle": "打造民眾主動式健康管理路徑",
+    "body": "從被動診治，轉向主動預警。",
+    "meta": [
+      "沈宛徵 RD",
+      "自費健康管理民眾",
+      "CGM / GLP-1 / AI"
+    ],
+    "bg": "images/cgm-bg.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 2,
+    "type": "case",
+    "tag": "opening case",
+    "title": "90 天故事線：從單點治療到主動管理",
+    "bullets": [
+      "Day 0：糖尿病前期，開始自費 CGM",
+      "Day 30：看見餐後尖峰與夜間波動",
+      "Day 60：導入 GLP-1 與 AI 儀表板",
+      "Day 90：用 TIR、體重與 HbA1c 追蹤成果"
+    ],
+    "stats": [
+      [
+        "HbA1c",
+        "可視化"
+      ],
+      [
+        "體重",
+        "趨勢化"
+      ],
+      [
+        "TIR",
+        "日常化"
+      ]
+    ],
+    "image": "images/cgm-metrics.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 3,
+    "type": "cards",
+    "tag": "agenda",
+    "title": "今日議程：四大模組",
+    "items": [
+      [
+        "市場",
+        "自費健康管理市場趨勢"
+      ],
+      [
+        "AI",
+        "行為數據監測與主動預警"
+      ],
+      [
+        "流程",
+        "CGM + GLP-1 的 90 天管理"
+      ],
+      [
+        "整合",
+        "穿戴裝置與檢測工具配置"
+      ]
+    ],
+    "mark": "[ICON]"
+  },
+  {
+    "n": 4,
+    "type": "stats",
+    "tag": "why now",
+    "title": "為什麼是現在？三個力量交會",
+    "stats": [
+      [
+        "GLP-1",
+        "全球擴散"
+      ],
+      [
+        "CGM",
+        "平民化"
+      ],
+      [
+        "AI Wearables",
+        "高速成長"
+      ]
+    ],
+    "bullets": [
+      "藥物、感測與演算法首次形成可落地閉環",
+      "民眾願意為可見數據與陪跑服務付費",
+      "診所可從一次性處置轉為長期管理"
+    ],
+    "mark": "[BG]"
+  },
+  {
+    "n": 5,
+    "type": "split",
+    "tag": "taiwan",
+    "title": "台灣獨特場景：自費需求被推向前台",
+    "bullets": [
+      "健保 CGM 給付限制仍高，第二型糖尿病與肥胖族群多需自費",
+      "高齡化與慢性病壓力，讓預防型服務更容易被理解",
+      "民眾從「買儀器」轉向「買一條管理路徑」"
+    ],
+    "image": "images/paradigm-shift.png"
+  },
+  {
+    "n": 6,
+    "type": "cards",
+    "tag": "learning goals",
+    "title": "演講學習目標",
+    "items": [
+      [
+        "看懂趨勢",
+        "辨識自費健康管理的成長入口"
+      ],
+      [
+        "設計流程",
+        "把 CGM、GLP-1、AI 組成 90 天路徑"
+      ],
+      [
+        "選對工具",
+        "依指標配置穿戴與檢測設備"
+      ],
+      [
+        "落地服務",
+        "包裝分層方案與團隊 SOP"
+      ]
+    ]
+  },
+  {
+    "n": 7,
+    "type": "section",
+    "tag": "module 1",
+    "title": "模組一",
+    "subtitle": "自費健康管理市場趨勢分析",
+    "body": "從市場現況看見診所與健康管理服務的新入口。",
+    "bg": "images/cgm-bg.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 8,
+    "type": "stats",
+    "tag": "market",
+    "title": "全球 CGM 市場：從醫療監測走向生活化",
+    "stats": [
+      [
+        "2025",
+        "148.7 億美元"
+      ],
+      [
+        "2026",
+        "162.9 億美元"
+      ],
+      [
+        "CAGR",
+        "9.6%"
+      ]
+    ],
+    "bullets": [
+      "CGM 不再只服務胰島素族群",
+      "減重、代謝症候群、糖尿病前期成為新應用場景",
+      "設備市場與服務市場同步擴張"
+    ]
+  },
+  {
+    "n": 9,
+    "type": "stats",
+    "tag": "glp-1",
+    "title": "GLP-1 正在改寫減重服務想像",
+    "stats": [
+      [
+        "體重",
+        "快速變化"
+      ],
+      [
+        "肌肉",
+        "需持續監測"
+      ],
+      [
+        "飲食",
+        "需個人化"
+      ]
+    ],
+    "bullets": [
+      "藥物有效，但不是完整療程",
+      "副作用、營養不足與肌肉流失需要專業陪跑",
+      "CGM 與體組成可補上可視化管理缺口"
+    ]
+  },
+  {
+    "n": 10,
+    "type": "split",
+    "tag": "payment",
+    "title": "自費的痛點，也可能是服務設計的起點",
+    "bullets": [
+      "民眾願意付費，但需要看見回饋",
+      "每月裝置費用若缺乏解讀，容易變成一次性嘗鮮",
+      "將數據轉譯成飲食、運動與劑量討論，才會形成黏著"
+    ],
+    "image": "images/cgm-metrics.png"
+  },
+  {
+    "n": 11,
+    "type": "compare",
+    "tag": "behavior",
+    "title": "消費行為轉變：治療型消費 → 預防型訂閱",
+    "leftTitle": "過去",
+    "rightTitle": "現在",
+    "left": [
+      "症狀出現才就醫",
+      "檢查報告一年一次",
+      "買單一檢測或單一療程"
+    ],
+    "right": [
+      "用數據提早預警",
+      "連續監測形成日常回饋",
+      "訂閱制與教練式陪跑"
+    ]
+  },
+  {
+    "n": 12,
+    "type": "cards",
+    "tag": "local cases",
+    "title": "台灣案例：自費健康生態圈正在成形",
+    "items": [
+      [
+        "桂冠 x 全家 x 華碩",
+        "量測、AI 分析、餐食選購"
+      ],
+      [
+        "健談系統",
+        "AI 食物辨識降低紀錄疲勞"
+      ],
+      [
+        "本土 CGM 廠商",
+        "從設備切入長期代謝追蹤"
+      ],
+      [
+        "企業健康促進",
+        "B2B2C 轉化為員工健康方案"
+      ]
+    ],
+    "mark": "[ICON]"
+  },
+  {
+    "n": 13,
+    "type": "cards",
+    "tag": "cost curve",
+    "title": "成本下降後，真正競爭的是整合能力",
+    "items": [
+      [
+        "口服 GLP-1",
+        "擴大潛在族群"
+      ],
+      [
+        "專利到期",
+        "長期費用可能下降"
+      ],
+      [
+        "生物相似藥",
+        "增加治療可近性"
+      ],
+      [
+        "監測剛需",
+        "CGM 與穿戴裝置需求上升"
+      ]
+    ]
+  },
+  {
+    "n": 14,
+    "type": "split",
+    "tag": "system shift",
+    "title": "市場典範轉移：單一產品 → 系統解決方案",
+    "bullets": [
+      "穿戴裝置成為數據入口，而不只是硬體",
+      "價值鏈重心從產品規格轉向服務整合",
+      "診所與健檢中心可成為資料轉譯者"
+    ],
+    "image": "images/paradigm-shift.png"
+  },
+  {
+    "n": 15,
+    "type": "cards",
+    "tag": "local device",
+    "title": "本土裝置機會：非侵入式趨勢追蹤",
+    "items": [
+      [
+        "手錶",
+        "日常配戴，降低門檻"
+      ],
+      [
+        "手環",
+        "運動與活動場景"
+      ],
+      [
+        "指環",
+        "睡眠與 HRV 連續監測"
+      ],
+      [
+        "CGM",
+        "代謝深度監測核心"
+      ]
+    ]
+  },
+  {
+    "n": 16,
+    "type": "cards",
+    "tag": "model 1",
+    "title": "商業模式一：訂閱制健康管理服務",
+    "items": [
+      [
+        "月費制",
+        "CGM + AI 儀表板"
+      ],
+      [
+        "專業解讀",
+        "營養師回饋與行為建議"
+      ],
+      [
+        "定期報告",
+        "TIR、體重、飲食模式"
+      ],
+      [
+        "續約理由",
+        "看見趨勢與風險預警"
+      ]
+    ]
+  },
+  {
+    "n": 17,
+    "type": "cards",
+    "tag": "model 2",
+    "title": "商業模式二與三：療程套餐、企業健康促進",
+    "items": [
+      [
+        "藥械綁定",
+        "GLP-1 + CGM + App"
+      ],
+      [
+        "分層方案",
+        "基礎、深度、全程照護"
+      ],
+      [
+        "企業導入",
+        "員工代謝風險管理"
+      ],
+      [
+        "轉介網絡",
+        "醫師、營養師、個管師共同服務"
+      ]
+    ]
+  },
+  {
+    "n": 18,
+    "type": "poll",
+    "tag": "live poll",
+    "title": "現場投票：你最想先落地哪一種模式？",
+    "options": [
+      "訂閱制健康管理",
+      "GLP-1 + CGM 套餐",
+      "企業健康促進",
+      "先做小型 MVP"
+    ],
+    "mark": "[INTERACT:poll]"
+  },
+  {
+    "n": 19,
+    "type": "section",
+    "tag": "module 2",
+    "title": "模組二",
+    "subtitle": "AI 如何優化病患行為數據監測",
+    "body": "把零散紀錄轉為可行動的主動預警。",
+    "bg": "images/risk-flow.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 20,
+    "type": "split",
+    "tag": "digital phenotype",
+    "title": "核心概念：數位表型 Digital Phenotyping",
+    "bullets": [
+      "用穿戴與 CGM 建構個人化生理行為指紋",
+      "從單次檢查改為連續特徵",
+      "AI 觀察的不只是血糖，而是生活模式"
+    ],
+    "image": "images/risk-flow.png"
+  },
+  {
+    "n": 21,
+    "type": "compare",
+    "tag": "active warning",
+    "title": "技術轉型：被動記錄 → 主動預警",
+    "leftTitle": "被動記錄",
+    "rightTitle": "主動預警",
+    "left": [
+      "使用者手動輸入",
+      "事後回顧",
+      "報表難以改變行為"
+    ],
+    "right": [
+      "自動偵測模式",
+      "即時提示風險",
+      "把建議推到決策瞬間"
+    ]
+  },
+  {
+    "n": 22,
+    "type": "cards",
+    "tag": "architecture",
+    "title": "AI 行為數據監測：四階段架構",
+    "items": [
+      [
+        "輸入",
+        "CGM、體組成、活動、HRV、睡眠、飲食"
+      ],
+      [
+        "處理",
+        "模式識別、風險分層、反應預測"
+      ],
+      [
+        "決策",
+        "異常示警、劑量與飲食支援"
+      ],
+      [
+        "回饋",
+        "App 推播、教練提醒、醫療端儀表板"
+      ]
+    ],
+    "mark": "[ICON]"
+  },
+  {
+    "n": 23,
+    "type": "cards",
+    "tag": "input",
+    "title": "數據輸入層：不是越多越好，而是要可解讀",
+    "items": [
+      [
+        "CGM",
+        "峰值、TIR、夜間波動"
+      ],
+      [
+        "BIA",
+        "體脂、肌肉、基礎代謝"
+      ],
+      [
+        "HRV / 睡眠",
+        "壓力與恢復狀態"
+      ],
+      [
+        "飲食紀錄",
+        "照片、語音、餐次脈絡"
+      ]
+    ]
+  },
+  {
+    "n": 24,
+    "type": "cards",
+    "tag": "ai process",
+    "title": "AI 處理層：把曲線翻譯成模式",
+    "items": [
+      [
+        "LSTM / CNN",
+        "處理時序血糖資料"
+      ],
+      [
+        "分群",
+        "找出高風險行為型態"
+      ],
+      [
+        "預測",
+        "估計 GLP-1 反應與副作用風險"
+      ],
+      [
+        "排序",
+        "讓專業人員先看最需要介入者"
+      ]
+    ]
+  },
+  {
+    "n": 25,
+    "type": "cards",
+    "tag": "decision",
+    "title": "臨床決策支援層：AI 提醒，人來判斷",
+    "items": [
+      [
+        "體重停滯",
+        "提醒飲食與運動調整"
+      ],
+      [
+        "驟降風險",
+        "檢查營養與肌肉流失"
+      ],
+      [
+        "低血糖",
+        "辨識藥物、飲食與運動互動"
+      ],
+      [
+        "副作用",
+        "紀錄噁心、腹脹、食慾變化"
+      ]
+    ]
+  },
+  {
+    "n": 26,
+    "type": "cards",
+    "tag": "feedback",
+    "title": "即時回饋層：把行為建議送到對的時刻",
+    "items": [
+      [
+        "患者 App",
+        "下一餐前提醒"
+      ],
+      [
+        "教練訊息",
+        "依準備度給建議"
+      ],
+      [
+        "儀表板",
+        "讓團隊共用同一張圖"
+      ],
+      [
+        "自動報表",
+        "每週趨勢回顧"
+      ]
+    ]
+  },
+  {
+    "n": 27,
+    "type": "stats",
+    "tag": "evidence",
+    "title": "證據亮點：AI 優化劑量與反應預測",
+    "stats": [
+      [
+        "67%",
+        "低血糖事件降低"
+      ],
+      [
+        "0.4%",
+        "HbA1c 改善"
+      ],
+      [
+        "89%",
+        "反應預測準確率"
+      ]
+    ],
+    "bullets": [
+      "數據不是為了炫技，而是為了降低風險",
+      "預測模型可協助療程分層與追蹤頻率安排",
+      "臨床判斷仍是最後決策點"
+    ]
+  },
+  {
+    "n": 28,
+    "type": "cards",
+    "tag": "adherence",
+    "title": "行為依從性：AI 最有價值的戰場",
+    "items": [
+      [
+        "降低摩擦",
+        "不用每天寫長篇日記"
+      ],
+      [
+        "提高可見性",
+        "讓民眾看見行為與曲線關係"
+      ],
+      [
+        "形成回饋",
+        "小調整也能被看見"
+      ],
+      [
+        "支援維持",
+        "避免療程結束後反彈"
+      ]
+    ]
+  },
+  {
+    "n": 29,
+    "type": "cards",
+    "tag": "jitai",
+    "title": "Just-in-time Adaptive Intervention",
+    "items": [
+      [
+        "時機",
+        "在決策前而非事後提醒"
+      ],
+      [
+        "情境",
+        "依睡眠、壓力、活動調整語氣"
+      ],
+      [
+        "內容",
+        "短句、可執行、低負擔"
+      ],
+      [
+        "追蹤",
+        "觀察提醒是否真的改變曲線"
+      ]
+    ]
+  },
+  {
+    "n": 30,
+    "type": "compare",
+    "tag": "privacy",
+    "title": "隱私與倫理：越個人化，越需要治理",
+    "leftTitle": "風險",
+    "rightTitle": "對策",
+    "left": [
+      "生理資料高度敏感",
+      "第三方雲端服務複雜",
+      "演算法建議可能被過度信任"
+    ],
+    "right": [
+      "知情同意與用途限定",
+      "權限分級與資料最小化",
+      "AI 只做輔助，保留人工複核"
+    ]
+  },
+  {
+    "n": 31,
+    "type": "cards",
+    "tag": "governance",
+    "title": "給診所的資料治理檢核",
+    "items": [
+      [
+        "資料來源",
+        "確認感測器與 App 權限"
+      ],
+      [
+        "資料儲存",
+        "確認雲端與匯出方式"
+      ],
+      [
+        "資料使用",
+        "明確告知用途與保存期限"
+      ],
+      [
+        "資料回饋",
+        "避免把 AI 建議說成診斷"
+      ]
+    ]
+  },
+  {
+    "n": 32,
+    "type": "quote",
+    "tag": "module 2 close",
+    "title": "模組二結論",
+    "quote": "AI 的價值不是取代專業，而是把最該被看見的訊號，提前推到專業人員與民眾眼前。"
+  },
+  {
+    "n": 33,
+    "type": "section",
+    "tag": "module 3",
+    "title": "模組三",
+    "subtitle": "CGM 與 GLP-1 減重個案的數位管理流程",
+    "body": "將藥物、數據與行為支持串成 90 天旅程。",
+    "bg": "images/future-roadmap.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 34,
+    "type": "split",
+    "tag": "integrated model",
+    "title": "整合式數位減重管理模型",
+    "bullets": [
+      "GLP-1 需嵌入生活型態管理，而非單獨用藥",
+      "CGM 提供代謝回饋，BIA 補上身體組成",
+      "AI 儀表板將多來源資料整合為可討論的趨勢"
+    ],
+    "image": "images/future-roadmap.png"
+  },
+  {
+    "n": 35,
+    "type": "cards",
+    "tag": "six flows",
+    "title": "六大整合數據流",
+    "items": [
+      [
+        "穿戴活動量",
+        "步數、運動、久坐"
+      ],
+      [
+        "HRV / 睡眠",
+        "壓力與恢復"
+      ],
+      [
+        "飲食紀錄",
+        "餐次與熱量品質"
+      ],
+      [
+        "症狀與用藥",
+        "副作用與依從性"
+      ],
+      [
+        "臨床量測",
+        "體重、腰圍、血壓"
+      ],
+      [
+        "生化值",
+        "HbA1c、血脂、肝腎功能"
+      ]
+    ],
+    "mark": "[ICON]"
+  },
+  {
+    "n": 36,
+    "type": "viz",
+    "tag": "90-day journey",
+    "title": "90 天數位管理流程：從基準線到維持",
+    "mark": "[VIZ]"
+  },
+  {
+    "n": 37,
+    "type": "timeline",
+    "tag": "day 0-7",
+    "title": "啟動期 Day 0-7：建立基準線",
+    "items": [
+      [
+        "AI/數位工具",
+        "CGM 初始配戴、體組成、飲食基線分析"
+      ],
+      [
+        "營養師/醫師",
+        "衛教說明、期望管理、SMART 目標"
+      ],
+      [
+        "民眾任務",
+        "學會看懂曲線，不急著追求完美"
+      ]
+    ]
+  },
+  {
+    "n": 38,
+    "type": "timeline",
+    "tag": "day 8-30",
+    "title": "誘導期 Day 8-30：找出高風險模式",
+    "items": [
+      [
+        "AI/數位工具",
+        "偵測血糖峰值食物與高風險進食時段"
+      ],
+      [
+        "營養師/醫師",
+        "依報告調整飲食，處理噁心腹脹"
+      ],
+      [
+        "民眾任務",
+        "先改一兩個最有效的行為"
+      ]
+    ]
+  },
+  {
+    "n": 39,
+    "type": "timeline",
+    "tag": "day 31-60",
+    "title": "優化期 Day 31-60：防止肌肉流失與停滯",
+    "items": [
+      [
+        "AI/數位工具",
+        "動態調整餐食建議，追蹤 BIA 變化"
+      ],
+      [
+        "營養師/醫師",
+        "高蛋白高纖、阻力訓練與劑量討論"
+      ],
+      [
+        "民眾任務",
+        "把體重下降轉成體組成改善"
+      ]
+    ]
+  },
+  {
+    "n": 40,
+    "type": "timeline",
+    "tag": "day 61-90",
+    "title": "穩定期 Day 61-90：轉銜自我管理",
+    "items": [
+      [
+        "AI/數位工具",
+        "自動生成趨勢報告與反彈風險示警"
+      ],
+      [
+        "營養師/醫師",
+        "長期維持計畫與追蹤頻率調降"
+      ],
+      [
+        "民眾任務",
+        "從被管理，轉為自己看得懂訊號"
+      ]
+    ]
+  },
+  {
+    "n": 41,
+    "type": "split",
+    "tag": "samsung mgh",
+    "title": "案例：以 BIA 監測 GLP-1 治療中的肌肉風險",
+    "bullets": [
+      "體重下降不等於成功減脂",
+      "需要同步監測肌肉量與活動量",
+      "可用活動處方支援療程安全性"
+    ],
+    "image": "images/cgm-metrics.png"
+  },
+  {
+    "n": 42,
+    "type": "split",
+    "tag": "digital twin",
+    "title": "案例：Digital Twin 把糖尿病與肥胖管理合併思考",
+    "bullets": [
+      "個人化模型協助預測反應",
+      "以更少藥物達到血糖控制與減重",
+      "重點是持續校正，而非一次性預測"
+    ],
+    "image": "images/risk-flow.png"
+  },
+  {
+    "n": 43,
+    "type": "compare",
+    "tag": "ai human",
+    "title": "AI + 人：混合照護模型",
+    "leftTitle": "AI 擅長",
+    "rightTitle": "人擅長",
+    "left": [
+      "24 小時監測",
+      "異常初篩",
+      "趨勢預測",
+      "自動報表"
+    ],
+    "right": [
+      "複雜情境判斷",
+      "動機式晤談",
+      "副作用溝通",
+      "價值與偏好協商"
+    ]
+  },
+  {
+    "n": 44,
+    "type": "table",
+    "tag": "role matrix",
+    "title": "團隊角色矩陣",
+    "columns": [
+      "角色",
+      "主要任務",
+      "核心輸出"
+    ],
+    "rows": [
+      [
+        "營養師",
+        "飲食紀錄品質、CGM 曲線詮釋",
+        "個人化菜單與行為建議"
+      ],
+      [
+        "醫師",
+        "藥物劑量與副作用管理",
+        "療程安全性決策"
+      ],
+      [
+        "個管師",
+        "提醒、追蹤、動機式晤談",
+        "依從性維持"
+      ],
+      [
+        "AI 系統",
+        "監測、示警、報表",
+        "優先處理清單"
+      ]
+    ]
+  },
+  {
+    "n": 45,
+    "type": "cards",
+    "tag": "sop",
+    "title": "人工複核 SOP：何時需要介入？",
+    "items": [
+      [
+        "低血糖風險",
+        "立即檢視飲食、運動與用藥"
+      ],
+      [
+        "體重驟降",
+        "確認蛋白質、熱量與肌肉量"
+      ],
+      [
+        "停滯超過 2 週",
+        "重新看餐次與活動策略"
+      ],
+      [
+        "副作用加重",
+        "回到醫師評估與劑量調整"
+      ]
+    ]
+  },
+  {
+    "n": 46,
+    "type": "quote",
+    "tag": "module 3 close",
+    "title": "模組三結論",
+    "quote": "90 天流程不是單純追體重，而是讓民眾學會用數據理解自己的代謝反應。"
+  },
+  {
+    "n": 47,
+    "type": "section",
+    "tag": "module 4",
+    "title": "模組四",
+    "subtitle": "善用智慧穿戴裝置與檢測工具",
+    "body": "依生理指標配置工具，整合不同療程健康管理。",
+    "bg": "images/cgm-bg.png",
+    "mark": "[BG]"
+  },
+  {
+    "n": 48,
+    "type": "cards",
+    "tag": "tool map",
+    "title": "工具盤點：先看要監測什麼",
+    "items": [
+      [
+        "血糖",
+        "CGM / 非侵入式趨勢"
+      ],
+      [
+        "身體組成",
+        "BIA 手錶、手環、量測站"
+      ],
+      [
+        "恢復",
+        "睡眠、HRV、壓力"
+      ],
+      [
+        "行為",
+        "活動量、飲食辨識、App 紀錄"
+      ]
+    ],
+    "mark": "[ICON]"
+  },
+  {
+    "n": 49,
+    "type": "cards",
+    "tag": "cgm tools",
+    "title": "連續血糖 CGM：代謝深度監測核心",
+    "items": [
+      [
+        "適用",
+        "GLP-1 減重、糖尿病前期、代謝症候群"
+      ],
+      [
+        "優勢",
+        "看見餐後尖峰與夜間波動"
+      ],
+      [
+        "限制",
+        "費用與配戴接受度"
+      ],
+      [
+        "服務重點",
+        "曲線解讀與行為轉譯"
+      ]
+    ]
+  },
+  {
+    "n": 50,
+    "type": "cards",
+    "tag": "non-invasive",
+    "title": "非侵入式血糖趨勢：重在趨勢，不做診斷",
+    "items": [
+      [
+        "定位",
+        "輕度代謝異常與兒童控糖"
+      ],
+      [
+        "價值",
+        "低門檻、長期趨勢"
+      ],
+      [
+        "溝通",
+        "誤差率需事前說明"
+      ],
+      [
+        "搭配",
+        "重要決策仍需醫療級檢測"
+      ]
+    ]
+  },
+  {
+    "n": 51,
+    "type": "cards",
+    "tag": "bia",
+    "title": "體組成 / 肌肉量：GLP-1 療程必看指標",
+    "items": [
+      [
+        "體脂率",
+        "判斷減重品質"
+      ],
+      [
+        "肌肉量",
+        "防止不健康下降"
+      ],
+      [
+        "基礎代謝",
+        "調整飲食策略"
+      ],
+      [
+        "阻力訓練",
+        "與營養處方連動"
+      ]
+    ]
+  },
+  {
+    "n": 52,
+    "type": "cards",
+    "tag": "sleep hrv",
+    "title": "睡眠與 HRV：壓力、恢復與反彈風險",
+    "items": [
+      [
+        "睡眠不足",
+        "提高食慾與血糖波動"
+      ],
+      [
+        "HRV 下降",
+        "壓力與恢復不足訊號"
+      ],
+      [
+        "情緒性進食",
+        "需與生活情境一起看"
+      ],
+      [
+        "提醒策略",
+        "從恢復先介入"
+      ]
+    ]
+  },
+  {
+    "n": 53,
+    "type": "cards",
+    "tag": "activity",
+    "title": "心率 / 活動量：讓運動處方可追蹤",
+    "items": [
+      [
+        "步數",
+        "基礎活動量"
+      ],
+      [
+        "心率",
+        "運動強度"
+      ],
+      [
+        "VO2 Max",
+        "體能趨勢"
+      ],
+      [
+        "久坐",
+        "比單次運動更常被忽略"
+      ]
+    ]
+  },
+  {
+    "n": 54,
+    "type": "cards",
+    "tag": "diet ai",
+    "title": "AI 飲食辨識：降低紀錄疲勞",
+    "items": [
+      [
+        "拍照",
+        "快速建立餐食紀錄"
+      ],
+      [
+        "語音",
+        "降低輸入門檻"
+      ],
+      [
+        "熱量估算",
+        "只作參考，重點是模式"
+      ],
+      [
+        "CGM 對照",
+        "找出個人化反應"
+      ]
+    ]
+  },
+  {
+    "n": 55,
+    "type": "compare",
+    "tag": "device combo",
+    "title": "多裝置策略：單一設備難以覆蓋所有場景",
+    "leftTitle": "單一設備",
+    "rightTitle": "組合式策略",
+    "left": [
+      "資料單薄",
+      "情境不足",
+      "容易誤判"
+    ],
+    "right": [
+      "戒指看睡眠",
+      "手錶看活動",
+      "CGM 看代謝",
+      "App 看飲食"
+    ]
+  },
+  {
+    "n": 56,
+    "type": "cards",
+    "tag": "platform",
+    "title": "整合平台三層架構",
+    "items": [
+      [
+        "設備層",
+        "多品牌感測器"
+      ],
+      [
+        "數據層",
+        "時間同步、標準化 API"
+      ],
+      [
+        "應用層",
+        "AI 分析與儀表板"
+      ],
+      [
+        "服務層",
+        "專業解讀與行動方案"
+      ]
+    ]
+  },
+  {
+    "n": 57,
+    "type": "split",
+    "tag": "zone health",
+    "title": "整合平台案例：把多來源資料放到同一個臨床端口",
+    "bullets": [
+      "CGM、活動、睡眠與穿戴裝置時間同步",
+      "醫療團隊看到的是趨勢，不是零散截圖",
+      "適合用於高頻追蹤與分層管理"
+    ],
+    "image": "images/future-roadmap.png"
+  },
+  {
+    "n": 58,
+    "type": "cards",
+    "tag": "agentic ai",
+    "title": "Agentic AI 趨勢：穿戴裝置成為智慧健康入口",
+    "items": [
+      [
+        "感知",
+        "自動蒐集生活與生理訊號"
+      ],
+      [
+        "推理",
+        "理解風險與情境"
+      ],
+      [
+        "行動",
+        "推送下一步建議"
+      ],
+      [
+        "協作",
+        "必要時升級給專業團隊"
+      ]
+    ]
+  },
+  {
+    "n": 59,
+    "type": "cards",
+    "tag": "checklist",
+    "title": "設備選型四準則",
+    "items": [
+      [
+        "醫療級背景",
+        "是否與醫院或研究合作驗證"
+      ],
+      [
+        "續航力",
+        "建議至少 10 天以上"
+      ],
+      [
+        "相容性",
+        "Apple Health / Google Fit / API"
+      ],
+      [
+        "便利性",
+        "配戴舒適與長期黏著"
+      ]
+    ]
+  },
+  {
+    "n": 60,
+    "type": "cards",
+    "tag": "package",
+    "title": "自費服務包裝：把工具變成路徑",
+    "items": [
+      [
+        "基礎監測型",
+        "裝置 + 每月報告"
+      ],
+      [
+        "深度管理型",
+        "CGM + 營養師諮詢"
+      ],
+      [
+        "全程照護型",
+        "GLP-1 + 多裝置 + 團隊追蹤"
+      ],
+      [
+        "企業方案",
+        "風險分層 + 團體教育 + 個案追蹤"
+      ]
+    ]
+  },
+  {
+    "n": 61,
+    "type": "cards",
+    "tag": "summary",
+    "title": "四大模組核心回顧",
+    "items": [
+      [
+        "市場趨勢",
+        "自費需求正在擴大"
+      ],
+      [
+        "AI 監測",
+        "從記錄走向預警"
+      ],
+      [
+        "數位流程",
+        "90 天可複製路徑"
+      ],
+      [
+        "穿戴整合",
+        "依指標配置工具"
+      ]
+    ],
+    "mark": "[BG]"
+  },
+  {
+    "n": 62,
+    "type": "split",
+    "tag": "path overview",
+    "title": "主動式健康管理路徑總覽",
+    "bullets": [
+      "篩檢：找出代謝風險與行為模式",
+      "介入：GLP-1、飲食、運動與 CGM 追蹤",
+      "維持：AI 預警、團隊複核與自我管理"
+    ],
+    "image": "images/future-roadmap.png"
+  },
+  {
+    "n": 63,
+    "type": "table",
+    "tag": "actions",
+    "title": "不同角色的下一步行動",
+    "columns": [
+      "角色",
+      "下一步",
+      "優先產出"
+    ],
+    "rows": [
+      [
+        "診所經營者",
+        "設計分層方案",
+        "服務包與定價"
+      ],
+      [
+        "營養師",
+        "建立 CGM 解讀流程",
+        "飲食回饋模板"
+      ],
+      [
+        "個管師",
+        "設計追蹤節奏",
+        "提醒與回訪 SOP"
+      ],
+      [
+        "IT 負責人",
+        "盤點資料串接",
+        "儀表板雛形"
+      ]
+    ]
+  },
+  {
+    "n": 64,
+    "type": "stats",
+    "tag": "outlook",
+    "title": "2026-2027 三重匯流機會",
+    "stats": [
+      [
+        "口服 GLP-1",
+        "可近性提升"
+      ],
+      [
+        "CGM 給付",
+        "可能鬆綁"
+      ],
+      [
+        "Agentic AI",
+        "穿戴入口升級"
+      ]
+    ],
+    "bullets": [
+      "機會不只在藥或裝置，而在誰能整合完整路徑",
+      "越早建立資料治理與服務 SOP，越容易放大"
+    ],
+    "mark": "[BG]"
+  },
+  {
+    "n": 65,
+    "type": "wordcloud",
+    "tag": "q&a wordcloud",
+    "title": "Q&A 文字雲：你最想追問哪個關鍵字？",
+    "body": "現場輸入問題關鍵詞，講者依文字雲回應優先順序。",
+    "mark": "[INTERACT:wordcloud]"
+  },
+  {
+    "n": 66,
+    "type": "resources",
+    "tag": "resources",
+    "title": "延伸資源與聯絡資訊",
+    "bullets": [
+      "2026 ADA 糖尿病照護標準與 CGM 更新",
+      "JMIR AI：Semaglutide Therapy Personalization",
+      "Digital phenotyping from wearables using AI",
+      "WHO GLP-1 Guidelines and AI Integration",
+      "WIRED：AI Digital Twins and diabetes / obesity"
+    ],
+    "body": "請將 QR code 或聯絡方式放在此頁。",
+    "bg": "images/cgm-bg.png",
+    "mark": "[BG]"
+  }
+];
+    const iconText = ["AI", "CGM", "RX", "90", "DATA", "TIR", "BIA", "HRV"];
+    const esc = (v) => String(v ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    const bulletList = (items=[]) => `<ul class="bullets">${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    const cardGrid = (items=[]) => `<div class="grid ${items.length > 4 ? "six" : ""}">${items.map((it, i) => `<div class="card"><div class="icon">${iconText[i % iconText.length]}</div><b>${esc(it[0])}</b><span>${esc(it[1])}</span></div>`).join("")}</div>`;
+    const stats = (items=[]) => `<div class="stats">${items.map(s => `<div class="stat"><div class="num">${esc(s[0])}</div><div class="label">${esc(s[1])}</div></div>`).join("")}</div>`;
+    const sectionAttrs = (s) => {
+      const bg = s.bg ? ` data-background-image="${esc(s.bg)}" data-background-opacity="${s.n === 1 ? "0.42" : "0.18"}" data-background-size="cover"` : "";
+      const sid = s.type === "poll" ? "slide-poll" : (s.type === "wordcloud" ? "slide-wordcloud" : `slide-${s.n}`);
+      return `id="${sid}" class="deck-bg"${bg}`;
+    };
+    const head = (s) => `<div class="kicker">${String(s.n).padStart(2,"0")} / ${esc(s.tag)} ${s.mark ? `<span class="mark">${esc(s.mark)}</span>` : ""}</div>`;
+
+    function renderSlide(s) {
+      if (s.type === "cover") {
+        return `<section ${sectionAttrs(s)}><div class="shade"></div><div class="layout title-slide">${head(s)}<h1>${esc(s.title)}</h1><h2 class="subtitle">${esc(s.subtitle)}</h2><p class="body">${esc(s.body)}</p><div class="meta-row">${(s.meta||[]).map(m => `<span class="pill">${esc(m)}</span>`).join("")}</div></div></section>`;
+      }
+      if (s.type === "section") {
+        return `<section ${sectionAttrs(s)}><div class="shade"></div><div class="layout title-slide">${head(s)}<h1>${esc(s.title)}</h1><h2 class="subtitle">${esc(s.subtitle)}</h2><p class="body">${esc(s.body)}</p></div></section>`;
+      }
+      if (s.type === "cards") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2>${cardGrid(s.items)}</div></section>`;
+      }
+      if (s.type === "stats") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2>${stats(s.stats)}${bulletList(s.bullets)}</div></section>`;
+      }
+      if (s.type === "split" || s.type === "case") {
+        return `<section ${sectionAttrs(s)}><div class="layout split"><div>${head(s)}<h2>${esc(s.title)}</h2>${s.stats ? stats(s.stats) : ""}${bulletList(s.bullets)}</div><div class="image-frame"><img src="${esc(s.image)}" alt=""></div></div></section>`;
+      }
+      if (s.type === "compare") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><div class="compare"><div class="compare-col left"><h3>${esc(s.leftTitle)}</h3><ul>${s.left.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><div class="vs">VS</div><div class="compare-col right"><h3>${esc(s.rightTitle)}</h3><ul>${s.right.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div></div></section>`;
+      }
+      if (s.type === "table") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><table><thead><tr>${s.columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${s.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></section>`;
+      }
+      if (s.type === "timeline") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><div class="timeline">${s.items.map(it => `<div class="timeline-item"><b>${esc(it[0])}</b><span>${esc(it[1])}</span></div>`).join("")}</div></div></section>`;
+      }
+      if (s.type === "quote") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><div class="quote">${esc(s.quote)}</div></div></section>`;
+      }
+      if (s.type === "poll") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><div class="poll-options" id="poll-options">${s.options.map((o,i) => `<button class="poll-btn" data-vote="${i}"><b>${esc(o)}</b><div class="bar-wrap"><div class="bar" id="poll-bar-${i}"></div></div><span id="poll-pct-${i}" style="color:#a9bdcf;font-size:.76em;">0%</span></button>`).join("")}</div><p class="lead" style="margin-top:18px;">已投票：<span id="poll-total">0</span> 人</p></div></section>`;
+      }
+      if (s.type === "wordcloud") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><p class="lead">${esc(s.body)}</p><div class="wc-grid"><div class="panel" style="display:flex;flex-direction:column;gap:12px;"><div><h3 style="margin:0 0 10px;color:var(--accent2);">輸入關鍵詞</h3><input id="wc-input" type="text" maxlength="20" placeholder="例如：肌肉流失、TIR、服務定價"><button class="btn" id="wc-btn" style="width:100%;margin-top:10px;">送出</button></div><div class="panel" style="flex:1;overflow:auto;"><h3 style="margin:0 0 10px;color:var(--warn);">熱門答案</h3><div id="wc-list" style="font-size:.36em;color:#d8e8f7;"></div><p style="font-size:.32em;color:#9fb4c8;">總提交：<span id="wc-total">0</span>　不同答案：<span id="wc-unique">0</span></p></div></div><div class="panel" style="position:relative;overflow:hidden;"><canvas id="wc-canvas"></canvas><div id="wc-empty" style="position:absolute;inset:0;display:grid;place-items:center;color:#6f8498;font-size:.42em;text-align:center;">等待第一個關鍵詞</div></div></div></div></section>`;
+      }
+      if (s.type === "viz") {
+        return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><div class="viz-stage"><div class="viz-before"><div class="viz-chip"><b>Day 0</b><span>基準線</span></div><div class="viz-chip"><b>Day 8</b><span>誘導期</span></div><div class="viz-chip"><b>Day 31</b><span>優化期</span></div><div class="viz-chip"><b>Day 61</b><span>穩定期</span></div></div><div class="viz-after" id="viz-after"><div class="viz-chip"><b>啟動</b><span>CGM + 目標</span></div><div class="viz-chip"><b>偵測</b><span>餐後峰值</span></div><div class="viz-chip"><b>調整</b><span>蛋白質 + 阻力</span></div><div class="viz-chip"><b>維持</b><span>預警 + 自管</span></div></div><div class="viz-divider" id="viz-divider"></div></div><input id="viz-slider" type="range" min="0" max="100" value="0"><p class="lead">拖曳滑桿，從「時間階段」揭露到「管理任務」。</p></div></section>`;
+      }
+      if (s.type === "qa") {
+        return `<section ${sectionAttrs(s)}><div class="layout qa">${head(s)}<div><h1>${esc(s.title)}</h1><p class="lead" style="text-align:center;">${esc(s.body)}</p></div></div></section>`;
+      }
+      if (s.type === "resources") {
+        return `<section ${sectionAttrs(s)}><div class="shade"></div><div class="layout">${head(s)}<h2>${esc(s.title)}</h2><p class="lead">${esc(s.body)}</p><ul class="source-list">${s.bullets.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></section>`;
+      }
+      return `<section ${sectionAttrs(s)}><div class="layout">${head(s)}<h2>${esc(s.title)}</h2>${bulletList(s.bullets)}</div></section>`;
+    }
+
+    document.getElementById("slides").innerHTML = slideData.map(renderSlide).join("");
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      transition: "slide",
+      transitionSpeed: "default",
+      backgroundTransition: "fade",
+      center: true,
+      progress: true,
+      controls: true,
+      slideNumber: "c/t"
+    });
+
+    const vizSlider = document.getElementById("viz-slider");
+    if (vizSlider) {
+      vizSlider.addEventListener("input", function() {
+        const v = +this.value;
+        document.getElementById("viz-after").style.clipPath = `inset(0 ${100 - v}% 0 0)`;
+        document.getElementById("viz-divider").style.left = v + "%";
+      });
+    }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy,
+      doc, setDoc
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYQhNavPSce17XtvDC5xnXyl9iUhW9KjA",
+      authDomain: "teacherstudy-109ef.firebaseapp.com",
+      projectId: "teacherstudy-109ef",
+      storageBucket: "teacherstudy-109ef.firebasestorage.app",
+      messagingSenderId: "196599230156",
+      appId: "1:196599230156:web:cfe55d364df3ae1b9d5c69"
+    };
+    const app = initializeApp(firebaseConfig);
+    const fdb = getFirestore(app);
+
+    const pollRef = doc(fdb, "ai_cgm_weight_loss_poll", "slide_18");
+    const userId = "u_" + Math.random().toString(36).slice(2, 10);
+    document.querySelectorAll(".poll-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const data = { updated_at: serverTimestamp() };
+        data[`votes.${userId}`] = btn.dataset.vote;
+        await setDoc(pollRef, data, { merge: true });
+      });
+    });
+    onSnapshot(pollRef, snap => {
+      const votes = Object.values((snap.data() || {}).votes || {});
+      const total = votes.length;
+      document.getElementById("poll-total").textContent = total;
+      for (let i = 0; i < 4; i++) {
+        const count = votes.filter(v => String(v) === String(i)).length;
+        const pct = total ? Math.round(count / total * 100) : 0;
+        document.getElementById(`poll-bar-${i}`).style.width = pct + "%";
+        document.getElementById(`poll-pct-${i}`).textContent = pct + "%";
+      }
+    });
+
+    const wordsRef = collection(fdb, "ai_cgm_weight_loss_wordcloud");
+    const colors = ["#4fc3f7", "#e8643a", "#ffb74d", "#81c784", "#ce93d8", "#80deea"];
+    const wcInput = document.getElementById("wc-input");
+    const wcButton = document.getElementById("wc-btn");
+    async function submitWord() {
+      const word = wcInput?.value.trim();
+      if (!word) return;
+      wcButton.disabled = true;
+      try {
+        await addDoc(wordsRef, { word, created_at: serverTimestamp() });
+        wcInput.value = "";
+      } finally {
+        wcButton.disabled = false;
+      }
+    }
+    wcButton?.addEventListener("click", submitWord);
+    wcInput?.addEventListener("keydown", e => {
+      if (e.key === "Enter") submitWord();
+    });
+    function drawWordCloud(data) {
+      const canvas = document.getElementById("wc-canvas");
+      const empty = document.getElementById("wc-empty");
+      if (!canvas || typeof WordCloud === "undefined") return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width < 20 || rect.height < 20) return;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      if (empty) empty.style.display = data.length ? "none" : "grid";
+      if (!data.length) return;
+      const max = data[0][1];
+      WordCloud(canvas, {
+        list: data.map(([w, c]) => [w, Math.max(18, Math.round((c / max) * 72))]),
+        gridSize: 6,
+        weightFactor: 1,
+        fontFamily: '"Noto Sans TC", "Microsoft JhengHei", sans-serif',
+        color: () => colors[Math.floor(Math.random() * colors.length)],
+        backgroundColor: "transparent",
+        rotateRatio: 0.3
+      });
+    }
+    onSnapshot(query(wordsRef, orderBy("created_at", "asc")), snap => {
+      const counts = {};
+      snap.forEach(d => {
+        const word = String(d.data().word || "").trim();
+        if (word) counts[word] = (counts[word] || 0) + 1;
+      });
+      const data = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const total = data.reduce((sum, [, count]) => sum + count, 0);
+      document.getElementById("wc-total").textContent = total;
+      document.getElementById("wc-unique").textContent = data.length;
+      document.getElementById("wc-list").innerHTML = data.slice(0, 12).map(([w, c]) => `<div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);padding:6px 0;"><span>${w}</span><b style="color:var(--accent);">${c}</b></div>`).join("") || "<span style='color:#7f93a8;'>尚無資料</span>";
+      drawWordCloud(data);
+    });
+    Reveal.on("slidechanged", e => {
+      if (e.currentSlide?.id === "slide-wordcloud") {
+        setTimeout(() => {
+          const rows = [...document.querySelectorAll("#wc-list div")].map(row => [row.firstElementChild.textContent, Number(row.lastElementChild.textContent)]);
+          drawWordCloud(rows);
+        }, 150);
+      }
+    });
+  </script>
+</body>
+</html>
