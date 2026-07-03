@@ -179,9 +179,19 @@
       min-height: 520px;
       height: min(620px, 74vh);
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.06);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(79,195,247,.12), transparent 58%),
+        rgba(3,8,20,.82);
     }
-    .image-frame img { width:100%; height:100%; max-height: none; object-fit: cover; display:block; filter: saturate(.98) brightness(.82); }
+    .image-frame img {
+      width:100%;
+      height:100%;
+      max-height: none;
+      object-fit: contain;
+      object-position: center;
+      display:block;
+      filter: saturate(.98) brightness(.88);
+    }
     .compare { display:grid; grid-template-columns: 1fr 72px 1fr; gap:0; margin-top: 24px; align-items: stretch; }
     .compare-col {
       padding: 20px;
@@ -1587,7 +1597,7 @@
     const cardGrid = (items=[]) => `<div class="grid ${items.length > 4 ? "six" : ""}">${items.map((it, i) => `<div class="card"><div class="icon">${iconText[i % iconText.length]}</div><b>${esc(it[0])}</b><span>${esc(it[1])}</span></div>`).join("")}</div>`;
     const stats = (items=[]) => `<div class="stats">${items.map(s => `<div class="stat"><div class="num">${esc(s[0])}</div><div class="label">${esc(s[1])}</div></div>`).join("")}</div>`;
     const sectionAttrs = (s) => {
-      const bg = s.bg ? ` data-background-image="${esc(s.bg)}" data-background-opacity="${s.n === 1 ? "0.42" : "0.18"}" data-background-size="cover"` : "";
+      const bg = s.bg ? ` data-background-image="${esc(s.bg)}" data-background-opacity="${s.n === 1 ? "0.42" : "0.18"}" data-background-size="contain" data-background-repeat="no-repeat"` : "";
       const sid = s.type === "poll" ? "slide-poll" : (s.type === "wordcloud" ? "slide-wordcloud" : `slide-${s.n}`);
       return `id="${sid}" class="deck-bg"${bg}`;
     };
